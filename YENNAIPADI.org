@@ -62,29 +62,30 @@ This generates a few samples, for example:
 
 If you want to type the few initial words and let the model generate the rest use the following. Wait for the =>>>= to appear and then types a couple of words and press return.
 #+begin_src bash
-    $ python sample-ponni.py --out_dir=out-ponniyinselvan-char  --device=cpu
-    
-    Overriding: out_dir = out-ponniyinselvan-char
-    Overriding: device = cpu
-    number of parameters: 42.53M
-    Loading meta from data/ponniyinselvan_char/meta.pkl...
-    >>> செந்தமிழ் 
-    செந்தமிழ் எடுத்துக்கொண்டிருந்தான் நம் கண்டரிதானுடைய பின்தொதியை அடைந்து விடுகிறது. சுற்றிக் கொண்டே முன் மறைந்து விட்டது; அது என்ன?" என்று சொல்லிவிட்டுச் சொல்லி விட்டுப் பூங்குழலி மறுபடியும் அறியாது.
+  $ python sample-ponni.py --out_dir=out-ponniyinselvan-char  --device=cpu
 
-    ஆதித்த கரிகாலனாகப் பிறந்த பிறகு கண்கள் பேய்ந்து மேலும் குந்தவைசேவர்களைக் காஷ்பிட்டுக் கொண்டுபிடித்து வந்தது. அதோ, அப்படியெல்லாம் முன்னலே குறித்து விட்டன. அவள் அந்த வீடு இருவரும் மதில் விழுந்து வைத்துக் கொண்டிருந்தது. மற்றும் ஒரு மூடப்போக்கிரமதி என்பதை நாம் காடுகிறாள் அறியாவிட்டு விடுகிறேன். அவளுடைய உள்ளம் எதிர
-    ---------------
-    >>> ^CTraceback (most recent call last):
-      File "sample-ponni.py", line 82, in <module>
-        start = input(">>> ")
-    KeyboardInterrupt
+  Overriding: out_dir = out-ponniyinselvan-char
+  Overriding: device = cpu
+  number of parameters: 42.53M
+  Loading meta from data/ponniyinselvan_char/meta.pkl...
+  >>> செந்தமிழ் 
+  செந்தமிழ் எடுத்துக்கொண்டிருந்தான் நம் கண்டரிதானுடைய பின்தொதியை அடைந்து விடுகிறது. சுற்றிக் கொண்டே முன் மறைந்து விட்டது; அது என்ன?" என்று சொல்லிவிட்டுச் சொல்லி விட்டுப் பூங்குழலி மறுபடியும் அறியாது.
 
+  ஆதித்த கரிகாலனாகப் பிறந்த பிறகு கண்கள் பேய்ந்து மேலும் குந்தவைசேவர்களைக் காஷ்பிட்டுக் கொண்டுபிடித்து வந்தது. அதோ, அப்படியெல்லாம் முன்னலே குறித்து விட்டன. அவள் அந்த வீடு இருவரும் மதில் விழுந்து வைத்துக் கொண்டிருந்தது. மற்றும் ஒரு மூடப்போக்கிரமதி என்பதை நாம் காடுகிறாள் அறியாவிட்டு விடுகிறேன். அவளுடைய உள்ளம் எதிர
+  ---------------
+  >>> ^CTraceback (most recent call last):
+    File "sample-ponni.py", line 82, in <module>
+      start = input(">>> ")
+  KeyboardInterrupt
 
-
-  ,**I only have a macbook** (or other cheap computer). No worries, we can still train a GPT but we want to dial things down a notch. I recommend getting the bleeding edge PyTorch nightly [[https://pytorch.org/get-started/locally/][select it here]] when installing) as it is currently quite likely to make your code more efficient. But even without it, a simple train run could look as follows:
-
-  ,#+begin_src bash
-    python train.py config/train_shakespeare_char.py --device=cpu --compile=False --eval_iters=20 --log_interval=1 --block_size=64 --batch_size=12 --n_layer=4 --n_head=4 --n_embd=128 --max_iters=2000 --lr_decay_iters=2000 --dropout=0.0
 #+end_src
 
-Here, since we are running on CPU instead of GPU we must set both =--device=cpu= and also turn off PyTorch 2.0 compile with =--compile=False=. Then when we evaluate we get a bit more noisy but faster estimate (=--eval_iters=20=, down from 200), our context size is only 64 characters instead of 256, and the batch size only 12 examples per iteration, not 64. We'll also use a much smaller Transformer (4 layers, 4 heads, 128 embedding size), and decrease the number of iterations to 2000 (and correspondingly usually decay the learning rate to around max_iters with =--lr_decay_iters=). Because our network is so small we also ease down on regularization (=--dropout=0.0=). This still runs in about ~3 minutes, but gets us a loss of only 1.88 and therefore also worse samples, but it's still good fun:
+
+**I only have a macbook** (or other cheap computer). No worries, we can still train a GPT but we want to dial things down a notch. I recommend getting the bleeding edge PyTorch nightly [[https://pytorch.org/get-started/locally/][select it here]] when installing) as it is currently quite likely to make your code more efficient. But even without it, a simple train run could look as follows:
+
+#+begin_src bash
+      python train.py config/train_shakespeare_char.py --device=cpu --compile=False --eval_iters=20 --log_interval=1 --block_size=64 --batch_size=12 --n_layer=4 --n_head=4 --n_embd=128 --max_iters=2000 --lr_decay_iters=2000 --dropout=0.0
+#+end_src
+
+Here, since we are running on CPU instead of GPU we must set both =--device=cpu= and also turn off PyTorch 2.0 compile with =--compile=False=. Then when we evaluate we get a bit more noisy but faster estimate (=--eval_iters=20=, down from 200), our context size is only 64 characters instead of 256, and the batch size only 12 examples per iteration, not 64. We'll also use a much smaller Transformer (4 layers, 4 heads, 128 embedding size), and decrease the number of iterations to 2000 (and correspondingly usually decay the learning rate to around max_iters with =--lr_decay_iters=). Because our network is so small we also ease down on regularization (=--dropout=0.0=). This still runs in about ~3 minutes, but gets us a loss of only 1.88 and therefore also worse samples, but it's still good fun:) 
 
