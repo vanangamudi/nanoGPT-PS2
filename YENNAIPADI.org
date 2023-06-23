@@ -13,7 +13,7 @@ Dependencies:
 #+end_src
 
 ** quick start
-Download [[https://drive.google.com/file/d/1vtTDRtBrl76AUm_f4eeG8Svkpo0wnJ46/view?usp=sharing][Model weights and meta files]] and extract them into their place.
+Download [[https://drive.google.com/file/d/1tQ8x5PNXtkm8WEdV9zpmX1iAXidrWCvK/view?usp=sharing][Model weights and meta files]] and extract them into their place.
 
 #+begin_src bash
   python sample.py --out_dir=out-ponniyinselvan-char --device=cpu
